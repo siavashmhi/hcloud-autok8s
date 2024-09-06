@@ -1,0 +1,10 @@
+---
+- hosts: all
+  vars:
+    ansible_ssh_private_key_file: /Users/siavashmohseni/.ssh/id_rsa
+  become: true
+  gather_facts: true
+  name: install docker
+  roles:
+  # install docker on all server
+    - { role: roles/docker, become: True, tags: docker }

@@ -1,0 +1,14 @@
+---
+# tasks file for docker
+- name: install docker
+  import_tasks: install_docker.yml
+  tags: install_docker
+
+- name: install docker-compose-plugin
+  import_tasks: install_compose.yml
+  tags: install_docker
+
+# config docker
+- name: config docker
+  import_tasks: config_docker.yml
+  tags: config_docker

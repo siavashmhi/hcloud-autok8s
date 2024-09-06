@@ -1,0 +1,17 @@
+---
+# tasks file for traefik
+- name: Create a directory if it does not exist
+  file:
+    path: /opt/services/traefik
+    state: directory
+    mode: '0755'
+
+- name: Copy traefik docker compose file
+  copy:
+    src: ./templates/docker-compose.yml
+    dest: /opt/services/traefik
+
+- name: Copy traeifk env file 
+  copy:
+    src: ./templates/.env
+    dest: /opt/services/traefik

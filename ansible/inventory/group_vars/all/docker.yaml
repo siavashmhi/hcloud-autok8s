@@ -1,0 +1,4 @@
+# docker variables
+docker:
+  registry_mirror: https://hub.hamdocker.ir
+  

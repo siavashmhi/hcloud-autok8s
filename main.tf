@@ -17,7 +17,7 @@ resource "hcloud_server" "servers" {
   for_each    = var.virtual_machines
   name        = each.value.server_name
   image       = "ubuntu-22.04"
-  server_type = "cx21"
+  server_type = "cpx11"
   location    = "nbg1"
   ssh_keys    = ["Siavash-MacOs"]
 

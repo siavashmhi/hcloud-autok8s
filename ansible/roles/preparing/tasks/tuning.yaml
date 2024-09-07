@@ -9,7 +9,7 @@
     name: "{{ item.key }}"
     state: present
     value: "{{ item.value }}"
-    sysctl_file: /etc/sysctl.d/MeCan.conf
+    sysctl_file: /etc/sysctl.d/cloudflow.conf
     reload: yes
     ignoreerrors: yes
   with_dict: '{{ sysctl_config }}'

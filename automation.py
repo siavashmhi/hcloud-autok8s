@@ -9,7 +9,7 @@ def parse_inventory(data):
     return [
         f"{hostname} ansible_host={ip} ansible_user=root ansible_port=22"
         for hostname, ip in data["server_ips"]["value"].items()
-    ]
+    ] 
 
 def write_inventory_file(filepath, servers):
     """Write the server inventory to a file."""

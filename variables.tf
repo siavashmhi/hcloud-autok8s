@@ -3,36 +3,16 @@ variable "hcloud_password" {
   description = "hcloud token."
 }
 
-variable "ubuntu_servers" {
-  type        = list(string)
-  description = "list of ubuntu servers."
+variable "ssh_public_key_path" {
+  type        = string
+  description = "existing SSH public key file."
 }
 
 variable "virtual_machines" {
   type = map(object({
-    server_name = string
+    server_name     = string
+    server_type     = string
+    server_location = string
   }))
   description = "description"
-  default = {
-    "master-server-1" = {
-      server_name = "master-server-1"
-    }
-
-    "master-server-2" = {
-      server_name = "master-server-2"
-    }
-
-    "master-server-3" = {
-      server_name = "master-server-3"
-    }
-
-    "worker-server-1" = {
-      server_name = "worker-server-1"
-    }
-
-    "worker-server-2" = {
-      server_name = "worker-server-2"
-    }
-  }
 }
-

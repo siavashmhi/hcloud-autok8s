@@ -12,14 +12,18 @@ resource "hcloud_network_subnet" "subnet" {
   ip_range     = "192.168.0.0/24"
 }
 
-# Create 4 Ubuntu servers with the specified SSH key, server type, and location
+resource "hcloud_ssh_key" "main_ssh_key" {
+  name       = "main_ssh_key"
+  public_key = file(var.ssh_public_key_path)
+}
+
 resource "hcloud_server" "servers" {
   for_each    = var.virtual_machines
   name        = each.value.server_name
   image       = "ubuntu-22.04"
-  server_type = "cpx11"
-  location    = "nbg1"
-  ssh_keys    = ["Siavash-MacOs"]
+  server_type = each.value.server_type
+  location    = each.value.server_location
+  ssh_keys    = ["main_ssh_key"]
 
   network {
     network_id = hcloud_network.cluster_network.id
@@ -27,24 +31,7 @@ resource "hcloud_server" "servers" {
 
   depends_on = [
     hcloud_network.cluster_network,
-    hcloud_network_subnet.subnet
+    hcloud_network_subnet.subnet,
+    hcloud_ssh_key.main_ssh_key
   ]
 }
-
-# resource "hcloud_server" "servers" {
-#   count       = length(var.ubuntu_servers)
-#   name        = var.ubuntu_servers[count.index]
-#   image       = "ubuntu-22.04"
-#   server_type = "cx21"
-#   location    = "nbg1"
-#   ssh_keys    = ["Siavash-MacOs"]
-
-#   network {
-#     network_id = hcloud_network.cluster_network.id
-#   }
-
-#   depends_on = [
-#     hcloud_network.cluster_network,
-#     hcloud_network_subnet.subnet
-#   ]
-# }

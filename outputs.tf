@@ -5,11 +5,3 @@ output "server_ips" {
     vm.server_name => hcloud_server.servers[vm_key].ipv4_address
   }
 }
-
-# output "server_ips" {
-#   value = {
-#     for idx, server_name in var.ubuntu_servers :
-#     server_name => hcloud_server.servers[idx].ipv4_address
-#   }
-# }
- 

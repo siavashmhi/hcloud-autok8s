@@ -4,7 +4,6 @@
 ### terraform ###
 .terraform
 *.tfstate* 
-*.tfvars
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

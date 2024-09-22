@@ -9,7 +9,7 @@ bootstrapTokens:
   - authentication
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: {{ master1_ip }}
+  advertiseAddress: {{ hostvars['master1']['ansible_host'] }}
   bindPort: 6443
 nodeRegistration:
   criSocket: unix:///var/run/containerd/containerd.sock
@@ -21,9 +21,9 @@ apiServer:
   extraArgs:
     authorization-mode: "Node,RBAC"
   certSANs:
-  - {{ master1_ip }}
-  - {{ master2_ip }}
-  - {{ master3_ip }}
+  - {{ hostvars['master1']['ansible_host'] }}
+  - {{ hostvars['master2']['ansible_host'] }}
+  - {{ hostvars['master3']['ansible_host'] }}
   - {{ master1_name }}
   - {{ master2_name }}
   - {{ master3_name }}
@@ -41,9 +41,9 @@ etcd:
     imageTag: "v3.5.9"
     dataDir: "/var/lib/etcd"
     serverCertSANs:
-      - {{ master1_ip }}
-      - {{ master2_ip }}
-      - {{ master3_ip }}
+      - {{ hostvars['master1']['ansible_host'] }}
+      - {{ hostvars['master2']['ansible_host'] }}
+      - {{ hostvars['master3']['ansible_host'] }}
       - {{ master1_name }}
       - {{ master2_name }}
       - {{ master3_name }}
@@ -53,9 +53,9 @@ etcd:
       - {{ master2_domain }}
       - {{ master3_domain }}
     peerCertSANs:
-    - {{ master1_ip }}
-    - {{ master2_ip }}
-    - {{ master3_ip }}
+    - {{ hostvars['master1']['ansible_host'] }}
+    - {{ hostvars['master2']['ansible_host'] }}
+    - {{ hostvars['master3']['ansible_host'] }}
     - {{ master1_name }}
     - {{ master2_name }}
     - {{ master3_name }}
@@ -70,8 +70,8 @@ kubernetesVersion: {{ kubernetes_version }}
 controlPlaneEndpoint: {{ controlplane_endpoint }}
 networking:
   dnsDomain: cluster.local
-  serviceSubnet: "10.96.0.0/12" 
-  podSubnet: "10.244.0.0/16" #flannel pod cidr
+  serviceSubnet: {{ service_subnet }}
+  podSubnet: {{ pod_subnet }} #flannel pod cidr
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration

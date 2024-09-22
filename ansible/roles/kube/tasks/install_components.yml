@@ -1,0 +1,84 @@
+---
+- name: Create /etc/sysctl.d directory
+  file:
+    path: /etc/sysctl.d
+    state: directory
+
+- name: Create kubernetes.conf file
+  file:
+    path: /etc/sysctl.d/kubernetes.conf
+    state: touch
+
+- name: Append lines to kubernetes.conf
+  blockinfile:
+    path: /etc/sysctl.d/kubernetes.conf
+    block: |
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.bridge.bridge-nf-call-iptables = 1
+
+- name: Load br_netfilter kernel module
+  modprobe:
+    name: br_netfilter
+
+- name: Load overlay kernel module
+  modprobe:
+    name: overlay
+
+- name: Download Kubernetes GPG key and store it in the apt keyring
+  shell: |
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  args:
+    executable: /bin/bash
+
+- name: Create kubernetes.list file
+  file:
+    path: /etc/apt/sources.list.d/kubernetes.list
+    state: touch
+  tags: kubernetes.list
+
+- name: Add Kubernetes apt repository
+  lineinfile:
+    path: /etc/apt/sources.list.d/kubernetes.list
+    line: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /'
+
+- name: Update and upgrade apt packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install Kubernetes components
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
+  tags: install-kuber
+
+- name: Hold Kubernetes components
+  shell: |
+    sudo apt-mark hold {{ item }}
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
+  tags: install-kuber
+
+- name: Copy kubelet config on master servers
+  template:
+    src: kubeadm_config.yml
+    dest: /opt/kubeadm_config.yml
+  tags: kubelet-config
+  when: inventory_hostname == "master1"
+
+# - name: Enable kubelet service
+#   systemd:
+#     name: kubelet
+#     enabled: yes
+
+# - name: Start kubelet service
+#   systemd:
+#     name: kubelet
+#     state: started

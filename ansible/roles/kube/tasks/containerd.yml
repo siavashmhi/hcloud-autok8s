@@ -1,0 +1,82 @@
+---
+- name: install dependency
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+    - gpg
+    - lsb-release
+    - gnupg
+    - conntrack
+
+- name: Download and add Docker GcPG key
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+- name: add docker repo
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: install containerd.io
+  apt:
+    name: containerd.io
+    state: latest
+    update_cache: yes
+
+- name: Restart service containerd and daemon-reload 
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: containerd
+
+- name: Enable containerd
+  systemd:
+    name: containerd
+    enabled: yes
+    state: restarted
+
+- name: Get default containerd config and save to /etc/containerd/config.toml
+  command: "containerd config default"
+  register: containerd_config
+
+- name: Write containerd config to /etc/containerd/config.toml
+  copy:
+    content: "{{ containerd_config.stdout }}"
+    dest: /etc/containerd/config.toml
+
+- name: Update containerd config
+  replace:
+    path: /etc/containerd/config.toml
+    regexp: 'SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
+
+- name: Restart service containerd and daemon-reload 
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: containerd
+
+- name: Enable containerd
+  systemd:
+    name: containerd
+    enabled: yes
+    state: restarted
+
+- name: Create crictl.yaml file
+  file:
+    path: /etc/crictl.yaml
+    state: touch
+
+- name: Create crictl.yaml file
+  ansible.builtin.copy:
+    content: |
+      runtime-endpoint: "unix:///run/containerd/containerd.sock"
+      timeout: 0
+      debug: false
+    dest: /etc/crictl.yaml

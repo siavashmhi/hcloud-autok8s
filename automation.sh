@@ -22,11 +22,4 @@ cd ansible
 
 # Run Ansible playbook
 echo "Running Ansible preparing playbook..."
-sudo ansible-playbook -i inventory/inventory.ini playbooks/preparing.yml
-
-echo "Waiting for the before ansible playbook to complete..."
-sleep 5
-
-# Run Ansible playbook
-echo "Running Ansible docker playbook..."
-sudo ansible-playbook -i inventory/inventory.ini playbooks/docker.yml
+sudo ansible-playbook -i inventory/inventory.ini playbooks/hardening.yml

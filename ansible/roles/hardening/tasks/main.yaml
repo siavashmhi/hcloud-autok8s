@@ -34,7 +34,3 @@
 - name: change sysctl.conf
   import_tasks: tuning.yaml
   tags: tuning
-
-# - name: download and config lynis scripts
-#   import_tasks: lynis.yaml
-#   tags: audit

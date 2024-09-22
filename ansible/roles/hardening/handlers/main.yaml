@@ -22,8 +22,6 @@
 - name: restart auditd
   become: 'yes'
   ansible.builtin.command: systemctl restart auditd 
-  args:
-    warn: false
 
 - name: generate auditd
   become: 'yes'

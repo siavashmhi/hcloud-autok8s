@@ -1,6 +1,0 @@
-# mirror registery
-- name: Make docker configuration file.
-  template:
-    src: daemon.j2
-    dest: /etc/docker/daemon.json
-  notify: restart docker

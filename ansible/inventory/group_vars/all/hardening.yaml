@@ -72,14 +72,6 @@ auditd_space_left_action: email
 grub_audit_backlog_cmdline: audit_backlog_limit=8192
 grub_audit_cmdline: audit=1
 
-# lynis variables
-lynis_version: '3.0.8'
-lynis_name: 'lynis-{{ lynis_version }}'
-lynis_tarball_url: 'https://cisofy.com/files/{{ lynis_name }}.tar.gz'
-lynis_tarball_unpackdest: '/opt'
-lynis_tarball_unpackdest_dir: '{{ lynis_tarball_unpackdest }}/lynis'
-lynis_tarball_dest: '{{ lynis_tarball_unpackdest_dir }}/{{ lynis_name }}.tar.gz'
-
 # dns variables
 dns: 8.8.8.8 1.1.1.1
 fallback_dns: 9.9.9.9 4.2.2.4

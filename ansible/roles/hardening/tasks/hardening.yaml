@@ -5,13 +5,6 @@
     state: stopped
     enabled: no
 
-- name: Stop and Disable postfix service if started
-  ansible.builtin.service:
-    name: postfix
-    state: stopped
-    enabled: no
-  ignore_errors: yes
-
 - name: Make timout configuration file.
   template:
     src: timout.j2

@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars:
+    ansible_ssh_private_key_file: /Users/siavashmohseni/.ssh/id_rsa
+  become: true
+  gather_facts: true
+  name: preparing and hardening playbook 
+  roles:
+    - { role: roles/hardening, become: True, tags: hardening }

@@ -42,6 +42,8 @@ sshd_config:
 iptables:
   network_adapter_access:
     - lo
+    - web_net
+    - app_net
   tcp_port_access:
     - 80
     - 443

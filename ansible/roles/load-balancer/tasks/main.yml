@@ -1,2 +1,12 @@
 ---
-# tasks file for load-balancer
+- name: install docker
+  import_tasks: install_docker.yml
+  tags: install_docker
+
+- name: install traefik
+  import_tasks: install_traefik.yml
+  tags: install_traefik
+
+- name: install haproxy 
+  import_tasks: install_haproxy.yml
+  tags: install_haproxy

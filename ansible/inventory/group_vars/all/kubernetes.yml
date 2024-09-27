@@ -1,17 +1,17 @@
-kubernetes_version: 1.30
-
+kubernetes_version: "1.30"
 service_subnet: "10.96.0.0/12" 
 pod_subnet: "10.244.0.0/16"
 
 domain_name: "cloudflow.ir"
-
-master1_name: "master-server-1"
-master2_name: "master-server-2"
-master3_name: "master-server-3"
-
 vip_api_name: "vip"
 vip_ip_address: "vip.cloudflow.ir"
+controlplane_endpoint: "vip.cloudflow.ir:6443"
 master1_domain: "master1.cloudflow.ir"
 master2_domain: "master2.cloudflow.ir"
 master3_domain: "master3.cloudflow.ir"
-controlplane_endpoint: "vip.cloudflow.ir:6443"
+
+# load-balancer cofigurations
+haproxy_sub_domain: "haproxy"
+traefik_sub_domain: "traefik"
+traefik_user: "siavash"
+traefik_password: "{SHA}27x1fULNcCWYFLK3dSKkc3t+I10="

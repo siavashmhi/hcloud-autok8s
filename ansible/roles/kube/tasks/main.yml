@@ -10,6 +10,6 @@
   import_tasks: init_cluster.yml
   tags: init_cluster
 
-- name: join kubernetes worker nodes
-  import_tasks: join_workers.yml
-  tags: join_workers
+# - name: join kubernetes worker nodes
+#   import_tasks: join_workers.yml
+#   tags: join_workers

@@ -5,3 +5,84 @@
   tags: kubelet-config
   when: inventory_hostname == "master1"
   
+- name: Pull all images 
+  ansible.builtin.command: >
+    kubeadm config images pull --config /opt/kubeadm_config.yml
+  when: inventory_hostname == 'master1'
+  tags: create_cluster
+
+- name: Initialize Kubernetes cluster (only on first master)
+  ansible.builtin.command: >
+    kubeadm init --config /opt/kubeadm_config.yml
+  when: inventory_hostname == 'master1'
+  register: kubeadm_output
+  tags: create_cluster
+
+- name: Create .kube directory for the user
+  ansible.builtin.file:
+    path: /{{ ansible_user }}/.kube
+    state: directory
+    mode: '0755'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  tags: create_cluster
+
+- name: Copy kubeconfig to user directory
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /{{ ansible_user }}/.kube/config
+    remote_src: yes
+    mode: '0644'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  when: inventory_hostname == 'master1'
+  tags: create_cluster
+
+- name: Install Flannel CNI (only on first master)
+  ansible.builtin.command: >
+    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  when: inventory_hostname == 'master1'
+  tags: add_cni
+
+- name: Fetch certificate directory from master1 to localhost
+  ansible.builtin.fetch:
+    src: /etc/kubernetes/pki
+    dest: /tmp/pki
+    flat: no
+  when: inventory_hostname == 'master1'
+  tags: copy_certs
+
+- name: Copy certificate directory from localhost to other masters
+  ansible.builtin.copy:
+    src: /tmp/pki
+    dest: /etc/kubernetes/pki
+  when: inventory_hostname == "master2" || inventory_hostname == "master3"
+  tags: copy_certs
+
+- name: Generate join command for master nodes
+  shell: kubeadm token create --print-join-command --ttl 1h
+  register: join_command
+  when: inventory_hostname == "master1" 
+  tags: join_master_nodes
+
+- name: Save join command to a file for future use
+  copy:
+    content: "{{ join_command.stdout }} --control-plane"
+    dest: /tmp/kubeadm_join_command_master.sh
+    mode: 0700
+  when: inventory_hostname == "master1" 
+  tags: join_master_nodes
+
+- name: Copy the join command from the first master node
+  fetch:
+    src: /tmp/kubeadm_join_command_master.sh
+    dest: /tmp/kubeadm_join_command_master.sh
+    flat: yes
+  when: inventory_hostname == "master2" || inventory_hostname == "master3"
+  tags: join_master_nodes
+
+- name: Run the join command to join the master node to the control plane
+  command: "bash /tmp/kubeadm_join_command_master.sh"
+  ignore_errors: true
+  when: inventory_hostname == "master2" || inventory_hostname == "master3"
+  tags: join_master_nodes

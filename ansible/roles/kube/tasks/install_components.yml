@@ -66,12 +66,3 @@
     - kubectl
   tags: install-kuber
 
-# - name: Enable kubelet service
-#   systemd:
-#     name: kubelet
-#     enabled: yes
-
-# - name: Start kubelet service
-#   systemd:
-#     name: kubelet
-#     state: started

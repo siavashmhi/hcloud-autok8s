@@ -37,7 +37,7 @@ def write_inventory_file(filepath, all_servers, masters, workers, load_balancers
         file.write("[load-balancer-servers]\n")
         file.write("\n".join(load_balancers) + "\n\n")
 
-        file.write("[all:children]\n")
+        file.write("[all]\n")
         file.write("\n".join(all_servers) + "\n\n")
 
 def main(inventory_path):

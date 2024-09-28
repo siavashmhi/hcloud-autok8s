@@ -28,6 +28,7 @@ packages:
 - auditd
 - libpwquality-common
 - cracklib-runtime
+- socat
 
 # sshd configuration
 sshd_config:

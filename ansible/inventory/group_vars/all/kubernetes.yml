@@ -1,7 +1,4 @@
-kubernetes_version: "1.30"
-service_subnet: "10.96.0.0/12" 
-pod_subnet: "10.244.0.0/16"
-
+kubernetes_version: "1.30.0"
 domain_name: "cloudflow.ir"
 vip_api_name: "vip"
 vip_ip_address: "vip.cloudflow.ir"

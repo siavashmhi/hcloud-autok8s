@@ -66,3 +66,9 @@
     - kubectl
   tags: install-kuber
 
+- name: Copy kubelet config on master servers
+  template:
+    src: kubeadm_config.yml
+    dest: /opt/kubeadm_config.yml
+  tags: kubelet-config
+  when: inventory_hostname == "master1"

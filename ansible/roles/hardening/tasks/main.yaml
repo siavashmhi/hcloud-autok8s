@@ -34,3 +34,11 @@
 - name: change sysctl.conf
   import_tasks: tuning.yaml
   tags: tuning
+
+- name: install containerd.io 
+  import_tasks: containerd.yml
+  tags: install_containerd 
+
+- name: install kubelet and kubeadm and kubectl
+  import_tasks: kube.yml
+  tags: install_kubernetes

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Apply Terraform configuration
-cd ..
+pwd
 echo "Applying Terraform configuration..."
 terraform apply -auto-approve
 
@@ -28,5 +28,12 @@ sudo ansible-playbook -i inventory/inventory.ini playbooks/hardening.yml
 echo "Waiting for 10 secound.."
 sleep 10
 
-echo "Running Ansible kube playbook for setup kuberntes cluster"
-sudo ansible-playbook -i inventory/inventory.ini playbooks/kube.yml
+echo "Running Ansible master_ndoes playbook for create master nodes in kuberntes."
+sudo ansible-playbook -i inventory/inventory.ini playbooks/master_ndoes.yml
+
+echo "Waiting for 10 secound.."
+sleep 10
+
+echo "Running Ansible worker_ndoes playbook for create worker nodes in kuberntes."
+sudo ansible-playbook -i inventory/inventory.ini playbooks/worker_ndoes.yml
+

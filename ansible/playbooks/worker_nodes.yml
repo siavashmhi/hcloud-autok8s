@@ -1,0 +1,21 @@
+---
+- hosts: kubernetes-workers
+  vars:
+    ansible_ssh_private_key_file: /Users/siavashmohseni/.ssh/id_rsa
+  become: true
+  gather_facts: true
+  name: join kubernetes worker nodes
+  tasks:
+    - name: copy join script to worker nodes
+      copy:
+        src: /tmp/kubeadm_join_command_worker.sh
+        dest: /tmp/kubeadm_join_command_worker.sh
+        mode: 0700
+      tags: join_worker_nodes
+
+    - name: Run the join command to join the worker node to the kubernetes cluster
+      command: "bash //tmp/kubeadm_join_command_worker.sh"
+      ignore_errors: true
+      tags: join_worker_nodes
+
+  

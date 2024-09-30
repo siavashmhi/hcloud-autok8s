@@ -13,7 +13,7 @@ defaults
     retries 3
 
 frontend api-server
-    bind 0.0.0.0:80
+    bind 0.0.0.0:6443
     mode tcp
     option tcplog
     default_backend backend-api-server
@@ -32,4 +32,4 @@ frontend stats
   stats enable
   stats uri /
   stats refresh 10s
-  stats auth {{ haproxy_user }}:{{ haproxy_pass }}
+  stats auth {{ haproxy_user }}:{{ haproxy_password }}

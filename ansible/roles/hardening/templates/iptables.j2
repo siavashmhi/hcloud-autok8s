@@ -41,6 +41,11 @@ COMMIT
 -A CHECK_INPUT -p tcp -m tcp --dport {{ tcp }} -j ACCEPT
 {% endfor %}
 {% endif %}
+{% if iptables.extra_tcp_ports is defined %}
+{% for tcp in iptables.extra_tcp_ports %}
+-A CHECK_INPUT -p tcp -m tcp --dport {{ tcp }} -j ACCEPT
+{% endfor %}
+{% endif %}
 {% if iptables.udp_port_access is defined %}
 {% for udp in iptables.udp_port_access %}
 -A CHECK_INPUT -p udp -m udp --dport {{ udp }} -j ACCEPT
@@ -48,7 +53,7 @@ COMMIT
 {% endif %}
 {% if iptables.trusted_IP is defined %}
 {% for ip in iptables.trusted_IP %}
--A CHECK_INPUT -s {{ ip }} -j ACCEPT -m comment --comment "The Trusted Server Ip"
+-A CHECK_INPUT -s {{ ip }} -j ACCEPT -m comment --comment "The Trusted Server IP"
 {% endfor %}
 {% endif %}
 {% if iptables.trusted_Range is defined %}
@@ -59,6 +64,3 @@ COMMIT
 -A CHECK_OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A CHECK_OUTPUT -j ACCEPT
 COMMIT
-
-
-

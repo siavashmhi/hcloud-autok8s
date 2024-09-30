@@ -112,7 +112,7 @@
     - name: Run the join command to join the master node to the control plane
       command: "bash /tmp/kubeadm_join_command_master.sh"
       ignore_errors: true
-      when: inventory_hostname == "master2" || inventory_hostname == "master3"
+      when: inventory_hostname == "master2" or inventory_hostname == "master3"
       tags: join_master_nodes
 
     - name: Copy kubeconfig to user directory
@@ -123,5 +123,5 @@
         mode: '0644'
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-      when: inventory_hostname == "master2" || inventory_hostname == "master3"
+      when: inventory_hostname == "master2" or inventory_hostname == "master3"
       tags: join_master_nodes

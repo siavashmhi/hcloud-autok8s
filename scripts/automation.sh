@@ -22,18 +22,24 @@ echo "Navigating to the Ansible directory..."
 cd ansible
 
 # Run Ansible playbook
-echo "Running Ansible preparing playbook..."
+echo "Running Ansible hardening playbook..."
 sudo ansible-playbook -i inventory/inventory.ini playbooks/hardening.yml
 
 echo "Waiting for 10 secound.."
 sleep 10
 
-echo "Running Ansible master_ndoes playbook for create master nodes in kuberntes."
-sudo ansible-playbook -i inventory/inventory.ini playbooks/master_ndoes.yml
+echo "Running Ansible load-balancer playbook..."
+sudo ansible-playbook -i inventory/inventory.ini playbooks/load-balancer.yml
 
 echo "Waiting for 10 secound.."
 sleep 10
 
-echo "Running Ansible worker_ndoes playbook for create worker nodes in kuberntes."
-sudo ansible-playbook -i inventory/inventory.ini playbooks/worker_ndoes.yml
+echo "Running Ansible master_ndoes playbook for create master nodes in kuberntes."
+sudo ansible-playbook -i inventory/inventory.ini playbooks/master_nodes.yml
+
+echo "Waiting for 10 secound.."
+sleep 10
+
+echo "Running Ansible worker_ndoes playbook for add worker nodes in kuberntes."
+sudo ansible-playbook -i inventory/inventory.ini playbooks/worker_nodes.yml
 

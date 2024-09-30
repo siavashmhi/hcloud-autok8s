@@ -28,6 +28,10 @@ def parse_inventory(data):
 def write_inventory_file(filepath, all_servers, masters, workers, load_balancers):
     """Write the server inventory to a file in the appropriate INI format."""
     with open(filepath, 'w') as file:
+        
+        file.write("[all]\n")
+        file.write("\n".join(all_servers) + "\n\n")
+
         file.write("[kubernetes-masters]\n")
         file.write("\n".join(masters) + "\n\n")
 
@@ -36,9 +40,6 @@ def write_inventory_file(filepath, all_servers, masters, workers, load_balancers
 
         file.write("[load-balancer-servers]\n")
         file.write("\n".join(load_balancers) + "\n\n")
-
-        file.write("[all]\n")
-        file.write("\n".join(all_servers) + "\n\n")
 
 def main(inventory_path):
     """Main function to handle the input JSON and write the inventory file."""

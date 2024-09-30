@@ -8,7 +8,5 @@ master2_domain: "master2.cloudflow.ir"
 master3_domain: "master3.cloudflow.ir"
 
 # load-balancer cofigurations
-haproxy_sub_domain: "haproxy"
-traefik_sub_domain: "traefik"
-traefik_user: "siavash"
-traefik_password: "{SHA}27x1fULNcCWYFLK3dSKkc3t+I10="
+haproxy_user: "siavash"
+haproxy_password: "{SHA}27x1fULNcCWYFLK3dSKkc3t+I10="

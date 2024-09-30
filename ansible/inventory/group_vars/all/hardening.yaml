@@ -43,11 +43,11 @@ sshd_config:
 iptables:
   network_adapter_access:
     - lo
-    - web_net
-    - app_net
   tcp_port_access:
     - 80
     - 443
+  # Open specific ports if hostname is haproxy-server
+  extra_tcp_ports: "{% if inventory_hostname == 'haproxy-server' %}[8404, 6433]{% else %}[]{% endif %}"
   #udp_port_access:
   trusted_IP: "{{ groups['all'] | map('extract', hostvars, 'ansible_host') | list }}"
 

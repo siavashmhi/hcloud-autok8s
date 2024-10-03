@@ -33,3 +33,4 @@
     project_src: "/opt/services/traefik" 
     files:
       - docker-compose.yml
+      

@@ -1,4 +1,4 @@
-hcloud_password     = "hcloud_token"
+hcloud_password     = "your_hcloud_token"
 ssh_public_key_path = "~/.ssh/id_rsa.pub"
 
 virtual_machines = {

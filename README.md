@@ -1,11 +1,11 @@
-## Install High Available Kuberntes Cluster with Terraform and Ansible on Hetzner Cloud.
+## Install High Available Kubernetes Cluster with Terraform and Ansible on Hetzner Cloud.
 
 This is end to end automation project for install high available kubernetes cluster on hetzner cloud with Terraform and Ansible.
 
 I use Terraform for create Kubernetes nodes and create private network and subnet in hcloud.
 and after install kubernetes, I use Terraform for config kubernetes cluster.
 
-I use Ansible as a configuration management and install kubernetes cluster.
+I use Ansible for install kubernetes cluster and server hardening process.
 
 ## Prerequisites
 
@@ -102,26 +102,27 @@ this is ansible variable file and use this for install kubernetes cluster.
 ```bash
 cat ansible/inventory/group_vars/all/kubernetes.yml 
 
-kubernetes_version: "1.30.0"
-domain_name: "cloudflow.ir"
-vip_api_name: "vip"
-vip_ip_address: "vip.cloudflow.ir"
-controlplane_endpoint: "vip.cloudflow.ir:6443"
-master1_domain: "master1.cloudflow.ir"
-master2_domain: "master2.cloudflow.ir"
-master3_domain: "master3.cloudflow.ir"
+domain_name: "domain.ir"
+vip_api_name: "vip" # kubernetes load balancer sub domain
+vip_ip_address: "vip.domain.ir" # kubernetes load balancer domain address
+controlplane_endpoint: "vip.domain.ir:6443" # kubernetes load balancer domain address
+master1_domain: "master1.domain.ir"  # master1 domain address
+master2_domain: "master2.domain.ir"  # master2 domain address
+master3_domain: "master3.domain.ir"  # master3 domain address
 
-# load-balancer cofigurations
-haproxy_user: "siavash"
-haproxy_password: "{SHA}27x1fULNcCWYFLK3dSKkc3t+I10="
+# kubernetes load balancer cofigurations
+haproxy_user: "username"
+haproxy_password: "password"
 
 # ingress load balancer configuraions
-ingress_haproxy_panel_sub: "haproxy"
+ingress_haproxy_panel_sub: "haproxy" # haproxy panel sub domain
+ingress_haproxy_user: "username"
+ingress_haproxy_password: "password"
+## traefik username and password and sub domain
+traefik_user: "username" 
+traefik_password: "password"
 traefik_sub_domain: "traefik"
-traefik_user: "siavash"
-traefik_password: "{SHA}27x1fULNcCWYFLK3dSKkc3t+I10="
-ingress_haproxy_user: "siavash"
-ingress_haproxy_password: "cloudflow"
+## ingress load balancer sub domains
 ingress_http_sub: "ingress1"
 ingress_https_sub: "ingress2"
 

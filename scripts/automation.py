@@ -17,7 +17,10 @@ def parse_inventory(data):
 
     master_servers = generate_inventory_group("master", server_ips)
     worker_servers = generate_inventory_group("worker", server_ips)
-    load_balancer_servers = generate_inventory_group("haproxy", server_ips)
+    load_balancer_servers = [
+        f"{hostname} ansible_host={ip} ansible_user=root ansible_port=22"
+        for hostname, ip in server_ips.items() if hostname.endswith("load-balancer")
+    ]
     all_servers = [
         f"{hostname} ansible_host={ip} ansible_user=root ansible_port=22"
         for hostname, ip in server_ips.items()

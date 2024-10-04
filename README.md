@@ -1,6 +1,6 @@
 ## Install High Available Kubernetes Cluster with Terraform and Ansible on Hetzner Cloud.
 
-![Kubernetes high level design](images/Kubernetes-design.png "Kubernetes high level design")
+![Kubernetes high level design](images/kuberntes-high-level-design.png "Kubernetes high level design")
 
 This is end to end automation project for install high available kubernetes cluster on hetzner cloud with Terraform and Ansible.
 

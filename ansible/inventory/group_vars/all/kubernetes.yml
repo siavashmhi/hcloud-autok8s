@@ -1,22 +1,22 @@
-kubernetes_version: "1.30.0"
+# master nodes domain
 domain_name: "cloudflow.ir"
-vip_api_name: "vip"
-vip_ip_address: "vip.cloudflow.ir"
 controlplane_endpoint: "vip.cloudflow.ir:6443"
 master1_domain: "master1.cloudflow.ir"
 master2_domain: "master2.cloudflow.ir"
 master3_domain: "master3.cloudflow.ir"
 
-# load-balancer cofigurations
+# kubernetes load balancer configurations
+lb_sub_domain: "vip"
+lb_ip_address: "vip.cloudflow.ir"
 haproxy_user: "siavash"
-haproxy_password: "{SHA}27x1fULNcCWYFLK3dSKkc3t+I10="
+haproxy_password: "cloudflow"
 
 # ingress load balancer configuraions
+ingress_http_sub: "ingress1"
+ingress_https_sub: "ingress2"
 ingress_haproxy_panel_sub: "haproxy"
 traefik_sub_domain: "traefik"
 traefik_user: "siavash"
 traefik_password: "{SHA}27x1fULNcCWYFLK3dSKkc3t+I10="
 ingress_haproxy_user: "siavash"
 ingress_haproxy_password: "cloudflow"
-ingress_http_sub: "ingress1"
-ingress_https_sub: "ingress2"

@@ -29,8 +29,8 @@ apiServer:
   - "{{ hostvars['master1']['ansible_hostname'] }}"
   - "{{ hostvars['master2']['ansible_hostname'] }}"
   - "{{ hostvars['master3']['ansible_hostname'] }}"
-  - "{{ vip_api_name }}"
-  - "{{ vip_ip_address }}"
+  - "{{ lb_sub_domain }}"
+  - "{{ lb_ip_address }}"
   - "{{ master1_domain }}"
   - "{{ master2_domain }}"
   - "{{ master3_domain }}"
@@ -48,8 +48,8 @@ etcd:
     - "{{ hostvars['master1']['ansible_hostname'] }}"
     - "{{ hostvars['master2']['ansible_hostname'] }}"
     - "{{ hostvars['master3']['ansible_hostname'] }}"
-    - "{{ vip_api_name }}"
-    - "{{ vip_ip_address }}"
+    - "{{ lb_sub_domain }}"
+    - "{{ lb_ip_address }}"
     - "{{ master1_domain }}"
     - "{{ master2_domain }}"
     - "{{ master3_domain }}"
@@ -60,13 +60,13 @@ etcd:
     - "{{ hostvars['master1']['ansible_hostname'] }}"
     - "{{ hostvars['master2']['ansible_hostname'] }}"
     - "{{ hostvars['master3']['ansible_hostname'] }}"
-    - "{{ vip_api_name }}"
-    - "{{ vip_ip_address }}"
+    - "{{ lb_sub_domain }}"
+    - "{{ lb_ip_address }}"
     - "{{ master1_domain }}"
     - "{{ master2_domain }}"
     - "{{ master3_domain }}"
 imageRepository: registry.k8s.io
-kubernetesVersion: "{{ kubernetes_version }}"
+kubernetesVersion: "1.30.0"
 controlPlaneEndpoint: {{ controlplane_endpoint }}
 networking:
   dnsDomain: cluster.local

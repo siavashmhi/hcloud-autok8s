@@ -97,14 +97,14 @@ virtual_machines = {
 
 ### Step 3: Change kubernetes.yml variable file.
 
-this is ansible variable file and use this for install kubernetes cluster.
+This is ansible variable file and use this for install kubernetes cluster.
 
 ```bash
 cat ansible/inventory/group_vars/all/kubernetes.yml 
 
 domain_name: "domain.ir"
-vip_api_name: "vip" # kubernetes load balancer sub domain
-vip_ip_address: "vip.domain.ir" # kubernetes load balancer domain address
+lb_sub_domain: "vip" # kubernetes load balancer sub domain
+lb_ip_address: "vip.domain.ir" # kubernetes load balancer domain address
 controlplane_endpoint: "vip.domain.ir:6443" # kubernetes load balancer domain address
 master1_domain: "master1.domain.ir"  # master1 domain address
 master2_domain: "master2.domain.ir"  # master2 domain address
@@ -127,3 +127,23 @@ ingress_http_sub: "ingress1"
 ingress_https_sub: "ingress2"
 
 ```
+
+### Step 4: Run kubernetes.sh script for setup kubernetes cluster. 
+
+I use this script for create resources on hcloud with terraform and after create resources in hcloud i use a python script for translate terraform output command to ansible inventory.ini file and after create inventoy.ini file i running ansible playbooks for server hardening and install kubernetes cluster.
+
+```bash
+./scripts/kubernetes.sh   
+```
+
+### Step 5: Set DNS records for load balancers and master nodes.
+
+after three or five minutes use this command for get servers ip.
+
+```bash
+terraform output -json
+```
+and after get servers ip, set DNS Records.
+
+![DNS Records](images/dns-records.png "DNS Records")
+

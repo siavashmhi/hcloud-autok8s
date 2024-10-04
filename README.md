@@ -1,5 +1,7 @@
 ## Install High Available Kubernetes Cluster with Terraform and Ansible on Hetzner Cloud.
 
+![Kubernetes high level design](images/Kubernetes-design.png "Kubernetes high level design")
+
 This is end to end automation project for install high available kubernetes cluster on hetzner cloud with Terraform and Ansible.
 
 I use Terraform for create Kubernetes nodes and create private network and subnet in hcloud.
@@ -8,6 +10,8 @@ and after install kubernetes, I use Terraform for config kubernetes cluster.
 I use Ansible for install kubernetes cluster and server hardening process.
 
 ## Prerequisites
+
+- **Terraform:** Ensure Terraform is installed on your system.
 
 - **Ansible:** Ensure Ansible is installed on your system.
 
@@ -143,7 +147,7 @@ after three or five minutes use this command for get servers ip.
 ```bash
 terraform output -json
 ```
-and after get servers ip, set DNS Records.
+After get servers ip, set DNS Records.
 
 ![DNS Records](images/dns-records.png "DNS Records")
 

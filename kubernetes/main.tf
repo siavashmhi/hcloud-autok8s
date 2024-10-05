@@ -38,3 +38,31 @@ resource "helm_release" "ingress_nginx" {
     file("./ingress-nginx/helm.values.yaml")  
   ]
 }
+
+resource "helm_release" "cert_manager" {
+  name             = "cert_manager"
+  chart            = "jetstack/cert-manager"
+  namespace        = "cert_manager"
+  create_namespace = true  
+  
+  repository = "https://charts.jetstack.io"
+  
+  # Reference the external values file
+  values = [
+    file("./cert-manager/helm.values.yml")  
+  ]
+
+  depends_on = [
+    kubectl_manifest.metrics_server,
+    helm_release.cert_manager
+  ]
+}
+
+resource "kubectl_manifest" "clusterissuer" {
+  yaml_body = file("./cert-manager/clusterissuer.yml") 
+
+  depends_on = [
+    helm_release.cert_manager
+  ] 
+}
+

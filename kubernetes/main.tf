@@ -1,3 +1,15 @@
+resource "kubectl_manifest" "storage_class" {
+  yaml_body = file("./prometheus/storage/storageclass.yaml")
+}
+
+resource "kubectl_manifest" "metrics_server" {
+  yaml_body = file("./metrics-server/components.yaml")
+}
+
+resource "kubectl_manifest" "clusterissuer" {
+  yaml_body = file("./cert-manager/clusterissuer.yml")
+}
+
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress-controller"
   repository = "https://charts.bitnami.com/bitnami"
@@ -48,12 +60,17 @@ resource "null_resource" "cert_manager" {
   ]
 }
 
-resource "kubectl_manifest" "metrics_server" {
-  yaml_body = file("./metrics-server/components.yaml")
-  
+resource "helm_release" "prometheus_stack" {
+  name       = "prometheus-stack"
+  chart      = "kube-prometheus-stack"
+  namespace  = "monitoring"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  create_namespace = true
+
   depends_on = [
+    helm_release.nginx_ingress,
     null_resource.cert_manager,
-    null_resource.cert_manager_repo,
-    helm_release.nginx_ingress
+    kubectl_manifest.storage_class,
+    kubectl_manifest.clusterissuer
   ]
 }

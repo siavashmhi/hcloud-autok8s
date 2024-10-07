@@ -1,12 +1,28 @@
 ---
-- name: install docker
-  import_tasks: install_docker.yml
-  tags: install_docker
+- name: Update APT package list
+  apt:
+    update_cache: yes
 
-- name: install traefik
-  import_tasks: install_traefik.yml
-  tags: install_traefik
+- name: Install HAProxy
+  apt:
+    name: haproxy
+    state: present
 
-- name: install haproxy 
-  import_tasks: install_haproxy.yml
-  tags: install_haproxy
+- name: Enable HAProxy to start at boot
+  systemd:
+    name: haproxy
+    enabled: yes
+
+- name: Ensure HAProxy is running
+  systemd:
+    name: haproxy
+    state: started
+
+- name: Copy HAProxy configuration file
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: 0644
+    backup: yes
+  notify:
+    - Restart HAProxy

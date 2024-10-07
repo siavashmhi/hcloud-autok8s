@@ -13,7 +13,7 @@ defaults
     retries 3
 
 frontend http-ingress-frontend
-    bind 0.0.0.0:32080
+    bind 0.0.0.0:80
     mode tcp
     option tcplog
     default_backend http-ingress-backend
@@ -28,7 +28,7 @@ backend http-ingress-backend
     server master-node-3 {{ hostvars['master3']['ansible_host'] }}:32080  check
 
 frontend https-ingress-frontend
-    bind 0.0.0.0:32443
+    bind 0.0.0.0:443
     mode tcp
     option tcplog
     default_backend https-ingress-backend
@@ -47,4 +47,4 @@ frontend stats
   stats enable
   stats uri /
   stats refresh 10s
-  stats auth {{ ingress_haproxy_user }}:{{ ingress_haproxy_password }}
+  stats auth {{ haproxy_user }}:{{ haproxy_password }}

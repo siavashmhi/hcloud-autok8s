@@ -1,6 +1,5 @@
 ---
-# handlers file for docker
-- name: restart docker
-  service:
-    name: docker
+- name: Restart HAProxy
+  systemd:
+    name: haproxy
     state: restarted

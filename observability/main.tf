@@ -7,7 +7,7 @@ resource "helm_release" "prometheus_stack" {
   wait = true
 
   values = [
-    file("./promtheus/helm.values.yaml")  
+    file("./prometheus/helm.values.yaml")  
   ]
 }
 
@@ -39,7 +39,7 @@ resource "null_resource" "get_pod_name" {
     }
   }
   
-  depends_on = [null_resource.get_etcd_certs]
+  depends_on = [kubectl_manifest.get_etcd_certs]
 }
 
 # Create the etcd-client-cert secret in the 'monitoring' namespace
@@ -49,9 +49,9 @@ resource "null_resource" "create_etcd_client_cert_secret" {
   provisioner "local-exec" {
     command = <<EOT
       kubectl create secret generic etcd-client-cert -n monitoring \
-      --from-literal=etcd-ca="$(kubectl exec ${null_resource.get_pod_name.environment.podname} -n default -- cat /etc/kubernetes/pki/etcd/ca.crt)" \
-      --from-literal=etcd-client="$(kubectl exec ${null_resource.get_pod_name.environment.podname} -n default -- cat /etc/kubernetes/pki/apiserver-etcd-client.crt)" \
-      --from-literal=etcd-client-key="$(kubectl exec ${null_resource.get_pod_name.environment.podname} -n default -- cat /etc/kubernetes/pki/apiserver-etcd-client.key)"
+      --from-literal=etcd-ca="$(kubectl exec $podname -n default -- cat /etc/kubernetes/pki/etcd/ca.crt)" \
+      --from-literal=etcd-client="$(kubectl exec $podname -n default -- cat /etc/kubernetes/pki/apiserver-etcd-client.crt)" \
+      --from-literal=etcd-client-key="$(kubectl exec $podname -n default -- cat /etc/kubernetes/pki/apiserver-etcd-client.key)"
     EOT
   }
 }

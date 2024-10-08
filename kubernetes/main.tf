@@ -6,10 +6,6 @@ resource "kubectl_manifest" "metrics_server" {
   yaml_body = file("./metrics-server/components.yaml")
 }
 
-resource "kubectl_manifest" "clusterissuer" {
-  yaml_body = file("./cert-manager/clusterissuer.yml")
-}
-
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress-controller"
   repository = "https://charts.bitnami.com/bitnami"
@@ -58,5 +54,13 @@ resource "null_resource" "cert_manager" {
 
   depends_on = [
     null_resource.cert_manager_repo
+  ]
+}
+
+resource "kubectl_manifest" "clusterissuer" {
+  yaml_body = file("./cert-manager/clusterissuer.yml")
+
+  depends_on = [
+    null_resource.cert_manager
   ]
 }

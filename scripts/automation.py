@@ -2,7 +2,7 @@
 import sys
 import json
 
-ANSIBLE_INVENTORY_PATH = "ansible/inventory/inventory.ini"
+ANSIBLE_INVENTORY_PATH = "../ansible/inventory/inventory.ini"
 
 def generate_inventory_group(host_pattern, server_ips):
     """Generate inventory entries for a specific group of servers based on a hostname pattern."""

@@ -14,6 +14,7 @@ run_playbook() {
 
 # Apply Terraform configuration
 echo "Applying Terraform configuration..."
+cd Infrastructure/
 terraform apply -auto-approve
 
 # Wait for Terraform to complete
@@ -22,15 +23,15 @@ sleep 10
 
 # Process Terraform output using Python script
 echo "Create Ansible inventory.ini file with terraform output.."
-terraform output -json | python3 scripts/automation.py
+terraform output -json | python3 ../scripts/automation.py
 
 # Change to the Ansible directory
 echo "Navigating to the Ansible directory..."
-cd ansible
+cd ../ansible
 
 # Run Ansible playbooks
 run_playbook "hardening"
 run_playbook "kube_load_balancer"
 run_playbook "ingress_load_balancer"
-run_playbook "master_nodes"
-run_playbook "worker_nodes"
+# run_playbook "master_nodes"
+# run_playbook "worker_nodes"

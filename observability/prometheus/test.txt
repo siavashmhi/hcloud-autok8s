@@ -1,0 +1,6 @@
+podname=$(kubectl get pods -o=jsonpath='{.items[0].metadata.name}' -n default | grep busybox)
+
+kubectl create secret generic etcd-client-cert -n monitoring \
+--from-literal=etcd-ca="$(kubectl exec $podname -n default -- cat /etc/kubernetes/pki/etcd/ca.crt)" \
+--from-literal=etcd-client="$(kubectl exec $podname -n default -- cat /etc/kubernetes/pki/apiserver-etcd-client.crt)" \
+--from-literal=etcd-client-key="$(kubectl exec $podname -n default -- cat /etc/kubernetes/pki/apiserver-etcd-client.key)" \

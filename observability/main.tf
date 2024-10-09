@@ -55,3 +55,22 @@ resource "null_resource" "create_etcd_client_cert_secret" {
     EOT
   }
 }
+
+resource "helm_release" "loki" {
+  name       = "loki"
+  chart      = "grafana/loki-stack"
+  namespace  = "loki-stack"
+  create_namespace = true
+
+  values = [
+    file("loki/helm.values.yaml")
+  ]
+
+  depends_on = [
+    helm_release.prometheus_stack,
+    kubectl_manifest.prometheus_secrets,
+    kubectl_manifest.get_etcd_certs,
+    null_resource.get_pod_name,
+    null_resource.create_etcd_client_cert_secret
+  ]
+}

@@ -1,9 +1,0 @@
----
-- hosts: ingress-load-balancer
-  vars:
-    ansible_ssh_private_key_file: /Users/siavashmohseni/.ssh/id_rsa
-  become: true
-  gather_facts: true
-  name: setup ingress load balancer with haproxy
-  roles:
-    - { role: roles/ingress-lb, become: True, tags: ingress-lb }

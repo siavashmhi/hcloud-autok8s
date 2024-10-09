@@ -31,7 +31,6 @@ cd ../ansible
 
 # Run Ansible playbooks
 run_playbook "hardening"
-run_playbook "kube_load_balancer"
-run_playbook "ingress_load_balancer"
-# run_playbook "master_nodes"
-# run_playbook "worker_nodes"
+run_playbook "load_balancer"
+run_playbook "master_nodes"
+run_playbook "worker_nodes"

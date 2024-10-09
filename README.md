@@ -3,8 +3,9 @@
 ![Kubernetes high level design](images/kuberntes-high-level-design.png "Kubernetes high level design")
 
 This is end to end automation project for install high available kubernetes cluster on hetzner cloud with Terraform and Ansible.
+You can install kubernetes cluster as drink a cup of coffee with this project.  
 
-I use Terraform for create Kubernetes nodes and create private network and subnet in hcloud.
+I use Terraform for create Kubernetes nodes in hcloud.
 and after install kubernetes, I use Terraform for config kubernetes cluster.
 
 I use Ansible for install kubernetes cluster and server hardening process.
@@ -15,7 +16,13 @@ I use Ansible for install kubernetes cluster and server hardening process.
 
 - **Ansible:** Ensure Ansible is installed on your system.
 
-## Setup Instructions
+## Table of Contents:
+- [Table of Contents:](#table-of-contents)
+    - [Install kubernetes cluster:](#Setup-Kubernetes-Cluster)
+    - [Deploy kubernetes add-ons with Terraform](kubernetes/README.md#Deploy-Kubernetes-add-ons-with-Terraform)
+    - [Deploy Observability System with Terraform](observability/README.md#Deploy-Observability-System-with-Terraform)
+
+#### Setup Kubernetes Cluster 
 
 ### Step 1: Clone the Repository
 

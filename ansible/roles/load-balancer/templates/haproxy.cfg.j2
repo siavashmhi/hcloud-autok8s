@@ -1,0 +1,89 @@
+{% if inventory_hostname == 'kube-load-balancer' %}
+global
+    log stdout format raw local0
+    maxconn 4096
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    timeout connect 5000ms
+    timeout client  50000ms
+    timeout server  50000ms
+    retries 3
+
+frontend api-server
+    bind 0.0.0.0:6443
+    mode tcp
+    option tcplog
+    default_backend backend-api-server
+ 
+backend backend-api-server
+    mode tcp
+    option tcp-check
+    balance roundrobin
+    default-server inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn 250 maxqueue 256 weight 100
+    server control-plane-1 {{ hostvars['master1']['ansible_host'] }}:6443 check
+    server control-plane-2 {{ hostvars['master2']['ansible_host'] }}:6443 check
+    server control-plane-3 {{ hostvars['master3']['ansible_host'] }}:6443 check
+
+frontend stats
+  bind *:8404
+  stats enable
+  stats uri /
+  stats refresh 10s
+  stats auth {{ haproxy_user }}:{{ haproxy_password }}
+
+{% elif inventory_hostname == 'ingress-load-balancer' %}
+global
+    log stdout format raw local0
+    maxconn 4096
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    timeout connect 5000ms
+    timeout client  50000ms
+    timeout server  50000ms
+    retries 3
+
+frontend http-ingress-frontend
+    bind 0.0.0.0:80
+    mode tcp
+    option tcplog
+    default_backend http-ingress-backend
+
+backend http-ingress-backend
+    mode tcp
+    option tcp-check
+    balance roundrobin
+    default-server inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn 250 maxqueue 256 weight 100
+    server master-node-1 {{ hostvars['master1']['ansible_host'] }}:32080 check
+    server master-node-2 {{ hostvars['master2']['ansible_host'] }}:32080 check
+    server master-node-3 {{ hostvars['master3']['ansible_host'] }}:32080 check
+
+frontend https-ingress-frontend
+    bind 0.0.0.0:443
+    mode tcp
+    option tcplog
+    default_backend https-ingress-backend
+
+backend https-ingress-backend
+    mode tcp
+    option tcp-check
+    balance roundrobin
+    default-server inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn 250 maxqueue 256 weight 100
+    server master1 {{ hostvars['master1']['ansible_host'] }}:32443 check
+    server master2 {{ hostvars['master2']['ansible_host'] }}:32443 check
+    server master3 {{ hostvars['master3']['ansible_host'] }}:32443 check
+
+frontend stats
+  bind *:8404
+  stats enable
+  stats uri /
+  stats refresh 10s
+  stats auth {{ ingress_haproxy_user }}:{{ ingress_haproxy_password }}
+{% endif %}

@@ -21,7 +21,6 @@ resource "kubectl_manifest" "prometheus_secrets" {
 resource "kubectl_manifest" "get_etcd_certs" {
   yaml_body = file("./prometheus/get-etcd-cert.yml")
   depends_on = [
-    helm_release.prometheus_stack,
     kubectl_manifest.prometheus_secrets
   ]
 }
@@ -44,7 +43,10 @@ resource "null_resource" "get_pod_name" {
 
 # Create the etcd-client-cert secret in the 'monitoring' namespace
 resource "null_resource" "create_etcd_client_cert_secret" {
-  depends_on = [null_resource.get_pod_name]
+  depends_on = [
+    null_resource.get_pod_name,
+    helm_release.prometheus_stack
+  ]
 
   provisioner "local-exec" {
     command = <<EOT
@@ -58,12 +60,13 @@ resource "null_resource" "create_etcd_client_cert_secret" {
 
 resource "helm_release" "loki" {
   name       = "loki"
-  chart      = "grafana/loki-stack"
+  chart      = "loki-stack"
   namespace  = "loki-stack"
   create_namespace = true
+  repository = "https://grafana.github.io/helm-charts"  
 
   values = [
-    file("loki/helm.values.yaml")
+    file("./loki/helm.values.yaml")
   ]
 
   depends_on = [
@@ -73,4 +76,5 @@ resource "helm_release" "loki" {
     null_resource.get_pod_name,
     null_resource.create_etcd_client_cert_secret
   ]
+
 }

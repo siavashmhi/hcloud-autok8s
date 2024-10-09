@@ -6,8 +6,9 @@ loki:
     enabled: true
     accessModes:
       - ReadWriteOnce
-    size: 50Gi
+    size: 5Gi
     type: pvc
+    storageClassName: local-path 
   limits:
     cpu: 1500m
     memory: 4096Mi
@@ -28,4 +29,3 @@ promtail:
     requests:
       cpu: 200m
       memory: 248Mi
-      

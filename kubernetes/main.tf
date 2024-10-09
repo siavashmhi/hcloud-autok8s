@@ -1,37 +1,87 @@
-resource "kubectl_manifest" "storage_provisioner" {
-  yaml_body = file("./storage/namespace.yml") 
-    + "\n---\n" 
-    + file("./storage/service-account.yml")
-    + "\n---\n" 
-    + file("./storage/cluster-role.yml")
-    + "\n---\n" 
-    + file("./storage/cluster-role-binding.yml")
-    + "\n---\n" 
-    + file("./storage/local-path-provisioner.yml")
-    + "\n---\n" 
-    + file("./storage/storageclass.yml")
-    + "\n---\n" 
-    + file("./storage/configmap.yml")
+resource "kubectl_manifest" "storage_provisioner_namespace" {
+  yaml_body = file("./storage/namespace.yml")
 }
 
-resource "kubectl_manifest" "metrics-server" {
-  yaml_body = file("./metrices-server/service-account.yml") 
-    + "\n---\n" 
-    + file("./metrices-server/cluster-role.yml")
-    + "\n---\n" 
-    + file("./metrices-server/cluster-role-two.yml")
-    + "\n---\n" 
-    + file("./metrices-server/role-binding.yml")
-    + "\n---\n" 
-    + file("./metrices-server/cluster-role-binding.yml")
-    + "\n---\n" 
-    + file("./metrices-server/cluster-role-binding-two.yml")
-    + "\n---\n" 
-    + file("./metrices-server/metrics-server.yml")
-    + "\n---\n" 
-    + file("./metrices-server/service.yml")
-    + "\n---\n" 
-    + file("./metrices-server/api-service.yml")
+resource "kubectl_manifest" "storage_provisioner_service_account" {
+  yaml_body = file("./storage/service-account.yml")
+  depends_on = [kubectl_manifest.storage_provisioner_namespace]
+}
+
+resource "kubectl_manifest" "storage_provisioner_cluster_role" {
+  yaml_body = file("./storage/cluster-role.yml")
+  depends_on = [kubectl_manifest.storage_provisioner_service_account]
+}
+
+resource "kubectl_manifest" "storage_provisioner_cluster_role_binding" {
+  yaml_body = file("./storage/cluster-role-binding.yml")
+  depends_on = [kubectl_manifest.storage_provisioner_cluster_role]
+}
+
+resource "kubectl_manifest" "storage_provisioner_storageclass" {
+  yaml_body = file("./storage/storageclass.yml")
+}
+
+resource "kubectl_manifest" "storage_provisioner_configmap" {
+  yaml_body = file("./storage/configmap.yml")
+  depends_on = [kubectl_manifest.storage_provisioner_storageclass]
+}
+
+resource "kubectl_manifest" "storage_provisioner_local_path" {
+  yaml_body = file("./storage/local-path-provisioner.yml")
+  depends_on = [
+    kubectl_manifest.storage_provisioner_namespace,
+    kubectl_manifest.storage_provisioner_service_account,
+    kubectl_manifest.storage_provisioner_cluster_role,
+    kubectl_manifest.storage_provisioner_cluster_role_binding,
+    kubectl_manifest.storage_provisioner_storageclass,
+    kubectl_manifest.storage_provisioner_configmap
+  ]
+}
+
+resource "kubectl_manifest" "metrics_server_service_account" {
+  yaml_body = file("./metrics-server/service-account.yml")
+}
+
+resource "kubectl_manifest" "metrics_server_cluster_role" {
+  yaml_body = file("./metrics-server/cluster-role.yml")
+}
+
+resource "kubectl_manifest" "metrics_server_cluster_role_two" {
+  yaml_body = file("./metrics-server/cluster-role-two.yml")
+}
+
+resource "kubectl_manifest" "metrics_server_role_binding" {
+  yaml_body = file("./metrics-server/role-binding.yml")
+  depends_on = [kubectl_manifest.metrics_server_service_account]
+}
+
+resource "kubectl_manifest" "metrics_server_cluster_role_binding" {
+  yaml_body = file("./metrics-server/cluster-role-binding.yml")
+  depends_on = [kubectl_manifest.metrics_server_service_account]
+}
+
+resource "kubectl_manifest" "metrics_server_cluster_role_binding_two" {
+  yaml_body = file("./metrics-server/cluster-role-binding-two.yml")
+  depends_on = [kubectl_manifest.metrics_server_service_account]
+}
+
+resource "kubectl_manifest" "metrics_server_deployment" {
+  yaml_body = file("./metrics-server/metrics-server.yml")
+  depends_on = [
+    kubectl_manifest.metrics_server_service_account,
+    kubectl_manifest.metrics_server_cluster_role,
+    kubectl_manifest.metrics_server_cluster_role_two
+  ]
+}
+
+resource "kubectl_manifest" "metrics_server_service" {
+  yaml_body = file("./metrics-server/service.yml")
+  depends_on = [kubectl_manifest.metrics_server_deployment]
+}
+
+resource "kubectl_manifest" "metrics_server_api_service" {
+  yaml_body = file("./metrics-server/api-service.yml")
+  depends_on = [kubectl_manifest.metrics_server_service]
 }
 
 resource "helm_release" "nginx_ingress" {

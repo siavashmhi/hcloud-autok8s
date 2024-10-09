@@ -1,9 +1,37 @@
-resource "kubectl_manifest" "storage_class" {
-  yaml_body = file("./storage/storageclass.yaml")
+resource "kubectl_manifest" "storage_provisioner" {
+  yaml_body = file("./storage/namespace.yml") 
+    + "\n---\n" 
+    + file("./storage/service-account.yml")
+    + "\n---\n" 
+    + file("./storage/cluster-role.yml")
+    + "\n---\n" 
+    + file("./storage/cluster-role-binding.yml")
+    + "\n---\n" 
+    + file("./storage/local-path-provisioner.yml")
+    + "\n---\n" 
+    + file("./storage/storageclass.yml")
+    + "\n---\n" 
+    + file("./storage/configmap.yml")
 }
 
-resource "kubectl_manifest" "metrics_server" {
-  yaml_body = file("./metrics-server/components.yaml")
+resource "kubectl_manifest" "metrics-server" {
+  yaml_body = file("./metrices-server/service-account.yml") 
+    + "\n---\n" 
+    + file("./metrices-server/cluster-role.yml")
+    + "\n---\n" 
+    + file("./metrices-server/cluster-role-two.yml")
+    + "\n---\n" 
+    + file("./metrices-server/role-binding.yml")
+    + "\n---\n" 
+    + file("./metrices-server/cluster-role-binding.yml")
+    + "\n---\n" 
+    + file("./metrices-server/cluster-role-binding-two.yml")
+    + "\n---\n" 
+    + file("./metrices-server/metrics-server.yml")
+    + "\n---\n" 
+    + file("./metrices-server/service.yml")
+    + "\n---\n" 
+    + file("./metrices-server/api-service.yml")
 }
 
 resource "helm_release" "nginx_ingress" {

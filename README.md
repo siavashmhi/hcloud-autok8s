@@ -19,12 +19,12 @@ I use Ansible for install kubernetes cluster and server hardening process.
 ## Table of Contents:
 - [Table of Contents:](#table-of-contents)
     - [Install kubernetes cluster:](#Setup-Kubernetes-Cluster)
-    - [Deploy kubernetes add-ons with Terraform](kubernetes/README.md#Deploy-Kubernetes-add-ons-with-Terraform)
+    - [Deploy kubernetes add-ons with Terraform](kubernetes/README.md#Kubernetes-Infrastructure-Deployment-with-Terraform-and-Helm)
     - [Deploy Observability System with Terraform](observability/README.md#Deploy-Observability-System-with-Terraform)
 
-#### Setup Kubernetes Cluster 
+### Setup Kubernetes Cluster 
 
-### Step 1: Clone the Repository
+#### Step 1: Clone the Repository
 
 To begin, clone this repository to your local machine:
 

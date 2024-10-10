@@ -2,6 +2,13 @@
 
 This project automates the deployment of Kubernetes resources and Helm charts using Terraform. It sets up a local-path storage provisioner, metrics server, and installs `nginx-ingress` and `cert-manager` via Helm.
 
+## Terraform will:
+
+1. Deploy Ingress NGINX using a Helm chart.
+2. Deploy the Metrics Server.
+3. Deploy the Local Path Storage provisioner.
+4. Deploy Cert Manager and configure a ClusterIssuer.
+
 ## Ingress nginx controller artchitect 
 
 ![Ingress nginx controller artchitect](../images/ingress-nginx.png "Ingress nginx controller artchitect")
@@ -10,8 +17,8 @@ This project automates the deployment of Kubernetes resources and Helm charts us
 
 Before starting, ensure you have the following installed on your local machine or environment:
 
-1. [Terraform](https://www.terraform.io/downloads.html) (version 0.12+)
-2. [Helm](https://helm.sh/docs/intro/install/) (version 3.16.1+)
+1. [Terraform](https://www.terraform.io/downloads.html) 
+2. [Helm](https://helm.sh/docs/intro/install/) 
 3. [kubectl](https://kubernetes.io/docs/tasks/tools/)
 4. Access to a Kubernetes cluster (with kubeconfig properly configured)
 

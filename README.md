@@ -15,7 +15,20 @@ This project provides end-to-end automation for setting up a highly available Ku
   2. [Kubernetes Infrastructure Deployment with Terraform (Ingress nginx, cert manager and metrics server)](kubernetes/)
   3. [Kubernetes Monitoring Stack with Prometheus and Loki](observability/)
 
-### Setup Kubernetes Cluster 
+## Setup Kubernetes Cluster 
+
+### This Project will:
+
+1. Create your Hetzner Cloud (hcloud) resources using Terraform, including Kubernetes nodes, load balancer nodes, a private network, and adding your SSH public key.
+2. Convert Terraform output into an Ansible `inventory.ini` file using a Python script.
+3. Prepare the servers by installing necessary packages and configuring services.
+4. Configure `iptables` on your servers.
+5. Configure your SSH service `(sshd)`.
+6. Initialize your Kubernetes cluster.
+7. Add master nodes to the Kubernetes cluster.
+8. Add worker nodes to the Kubernetes cluster.
+9. Configure the Kubernetes API server load balancer.
+10. Configure the ingress load balancer.
 
 #### Step 1: Clone the Repository
 

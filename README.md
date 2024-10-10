@@ -2,13 +2,7 @@
 
 ![Kubernetes high level design](images/kuberntes-high-level-design.png "Kubernetes high level design")
 
-This is end to end automation project for install high available kubernetes cluster on hetzner cloud with Terraform and Ansible.
-You can install kubernetes cluster as drink a cup of coffee with this project.  
-
-I use Terraform for create Kubernetes nodes in hcloud.
-and after install kubernetes, I use Terraform for config kubernetes cluster.
-
-I use Ansible for install kubernetes cluster and server hardening process.
+This project provides end-to-end automation for setting up a highly available Kubernetes cluster on Hetzner Cloud using Terraform and Ansible. With this project, you can set up a Kubernetes cluster as effortlessly as enjoying a cup of coffee.
 
 ## Prerequisites
 
@@ -17,10 +11,9 @@ I use Ansible for install kubernetes cluster and server hardening process.
 - **Ansible:** Ensure Ansible is installed on your system.
 
 ## Table of Contents:
-- [Table of Contents:](#table-of-contents)
-    - [Install kubernetes cluster](#Setup-Kubernetes-Cluster)
-    - [Kubernetes Infrastructure Deployment with Terraform and Helm (Ingress nginx, cert manager and metrics server)](kubernetes/README.md#Kubernetes-Infrastructure-Deployment-with-Terraform-and-Helm)
-    - [Kubernetes Monitoring Stack with Prometheus and Loki](observability/README.md#Kubernetes-Monitoring-Stack-with-Prometheus-and-Loki)
+  1. [Install kubernetes cluster](#Setup-Kubernetes-Cluster)
+  2. [Kubernetes Infrastructure Deployment with Terraform (Ingress nginx, cert manager and metrics server)](kubernetes/README.md#Kubernetes-Infrastructure-Deployment-with-Terraform-and-Helm)
+  3. [Kubernetes Monitoring Stack with Prometheus and Loki](observability/README.md#Kubernetes-Monitoring-Stack-with-Prometheus-and-Loki)
 
 ### Setup Kubernetes Cluster 
 
@@ -33,18 +26,20 @@ git clone https://github.com/siavashmhi/hcloud-autok8s.git
 cd hcloud-autok8s
 ```
 
-### Step 2: Change terraform.tfvars variable file.
+#### Step 2: Modify terraform.tfvars
 
-You have to set your hcloud token and ssh public key path in terraform.tfvars file.
-and you have to set virtual machine configs in virtual_machines variable.
-as default value i use cpx31 server type for kubernetes nodes, this server type have 4 core cpu and 8G memory and 160G disk, and for load balancers i use cpx11 server type, this server type have 2 core cpu and 2G memory and 40G disk, you can change server types.
+Set your Hetzner Cloud token and SSH public key path in the terraform.tfvars file. Also, configure the virtual machine settings in the virtual_machines variable.
 
-for see server types on Hetzner Cloud you can use thease commands:
+By default, the configuration uses the `cpx31` server type for Kubernetes nodes, which provides `4 CPU cores`, `8GB of memory`, and `160GB of disk` space. and for load balancers, it uses the `cpx11` server type, offering `2 CPU cores`, `2GB of memory`, and `40GB of disk` space. You can adjust the server types as needed.
+
+To view available server types on Hetzner Cloud, run the following commands:
 ```bash
 cat hcloud/server_types.json 
 
 curl -H "Authorization: Bearer your_api_token" https://api.hetzner.cloud/v1/server_types
 ```
+
+An example terraform.tfvars file:
 
 ```bash
 cat Infrastructure/terraform.tfvars  
@@ -55,43 +50,43 @@ ssh_public_key_path = "~/.ssh/id_rsa.pub"
 virtual_machines = {
   "master1" = {
     server_name     = "master1"
-    server_type     = "cpx31"
+    server_type     = "cpx31" # change
     server_location = "nbg1"
   }
 
   "master2" = {
     server_name     = "master2"
-    server_type     = "cpx31"
+    server_type     = "cpx31" # change
     server_location = "nbg1"
   }
 
   "master3" = {
     server_name     = "master3"
-    server_type     = "cpx31"
+    server_type     = "cpx31" # change
     server_location = "nbg1"
   }
 
   "worker1" = {
     server_name     = "worker1"
-    server_type     = "cpx31"
+    server_type     = "cpx31" # change
     server_location = "nbg1"
   }
 
   "worker2" = {
     server_name     = "worker2"
-    server_type     = "cpx31"
+    server_type     = "cpx31" # change
     server_location = "nbg1"
   }
 
   "kube-load-balancer" = {
     server_name     = "kube-load-balancer"
-    server_type     = "cpx11"
+    server_type     = "cpx11" # change
     server_location = "nbg1"
   }
 
   "ingress-load-balancer" = {
     server_name     = "ingress-load-balancer"
-    server_type     = "cpx11"
+    server_type     = "cpx11" # change
     server_location = "nbg1"
   }
 
@@ -99,9 +94,9 @@ virtual_machines = {
 
 ```
 
-### Step 3: Change kubernetes.yml variable file.
+### Step 3: Modify kubernetes.yml
 
-This is ansible variable file and use this for install kubernetes cluster.
+This is the Ansible variable file used for installing the Kubernetes cluster:
 
 ```bash
 cat ansible/inventory/group_vars/all/kubernetes.yml 
@@ -125,21 +120,22 @@ ingress_haproxy_password: "cloudflow"
 
 ```
 
-### Step 4: Run kubernetes.sh script for setup kubernetes cluster. 
+### Step 4: Run the kubernetes.sh Script 
 
-I use this script for create resources on hcloud with terraform and after create resources in hcloud i use a python script for translate terraform output command to ansible inventory.ini file and after create inventoy.ini file i running ansible playbooks for server hardening and install kubernetes cluster.
+Run the script to create the resources on Hetzner Cloud using Terraform. Once the resources are created, a `Python script will translate Terraform output into an Ansible inventory.ini file`. Then, Ansible playbooks will run for server hardening and Kubernetes installation.
 
 ```bash
 ./scripts/kubernetes.sh   
 ```
 
-### Step 5: Set DNS records for load balancers and master nodes.
+### Step 5: Set DNS Records for Load Balancers and Master Nodes
 
-after three or five minutes use this command for get servers ip.
+After 3-5 minutes, retrieve the IP addresses of the servers using this command:
 
 ```bash
 terraform output -json
 ```
-After get servers ip, set DNS Records.
+
+Once you have the server IPs, set the necessary DNS records.
 
 ![DNS Records](images/records.png "DNS Records")

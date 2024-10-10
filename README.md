@@ -12,8 +12,8 @@ This project provides end-to-end automation for setting up a highly available Ku
 
 ## Table of Contents:
   1. [Install kubernetes cluster](#Setup-Kubernetes-Cluster)
-  2. [Kubernetes Infrastructure Deployment with Terraform (Ingress nginx, cert manager and metrics server)](kubernetes/README.md#Kubernetes-Infrastructure-Deployment-with-Terraform-and-Helm)
-  3. [Kubernetes Monitoring Stack with Prometheus and Loki](observability/README.md#Kubernetes-Monitoring-Stack-with-Prometheus-and-Loki)
+  2. [Kubernetes Infrastructure Deployment with Terraform (Ingress nginx, cert manager and metrics server)](kubernetes/)
+  3. [Kubernetes Monitoring Stack with Prometheus and Loki](observability/)
 
 ### Setup Kubernetes Cluster 
 

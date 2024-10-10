@@ -4,7 +4,7 @@ This project automates the deployment of Kubernetes resources and Helm charts us
 
 ## Ingress nginx controller artchitect 
 
-![Ingress nginx controller artchitect](images/ingress-nginx.png "Ingress nginx controller artchitect")
+![Ingress nginx controller artchitect](../images/ingress-nginx.png "Ingress nginx controller artchitect")
 
 ## Prerequisites
 

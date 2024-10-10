@@ -18,9 +18,9 @@ I use Ansible for install kubernetes cluster and server hardening process.
 
 ## Table of Contents:
 - [Table of Contents:](#table-of-contents)
-    - [Install kubernetes cluster:](#Setup-Kubernetes-Cluster)
-    - [Deploy kubernetes add-ons with Terraform](kubernetes/README.md#Kubernetes-Infrastructure-Deployment-with-Terraform-and-Helm)
-    - [Deploy Observability System with Terraform](observability/README.md#Deploy-Observability-System-with-Terraform)
+    - [Install kubernetes cluster](#Setup-Kubernetes-Cluster)
+    - [Kubernetes Infrastructure Deployment with Terraform and Helm (Ingress nginx, cert manager and metrics server)](kubernetes/README.md#Kubernetes-Infrastructure-Deployment-with-Terraform-and-Helm)
+    - [Kubernetes Monitoring Stack with Prometheus and Loki](observability/README.md#Kubernetes-Monitoring-Stack-with-Prometheus-and-Loki)
 
 ### Setup Kubernetes Cluster 
 

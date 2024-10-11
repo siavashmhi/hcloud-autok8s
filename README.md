@@ -6,9 +6,8 @@ This project provides end-to-end automation for setting up a highly available Ku
 
 ## Prerequisites
 
-- **Terraform:** Ensure Terraform is installed on your system.
-
-- **Ansible:** Ensure Ansible is installed on your system.
+1.  **Terraform:** Ensure Terraform is installed on your system.
+2.  **Ansible:** Ensure Ansible is installed on your system.
 
 ## Table of Contents:
   1. [Install kubernetes cluster](#Setup-Kubernetes-Cluster)

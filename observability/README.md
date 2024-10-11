@@ -30,9 +30,9 @@ You can modify the pod used for certificate retrieval by editing the null_resour
 
 Before running this project, ensure you have the following installed:
 
-1. [Terraform](https://www.terraform.io/downloads.html) (version 0.12+)
-2. [Helm](https://helm.sh/docs/intro/install/) (version 3.16.1+)
-3. [kubectl](https://kubernetes.io/docs/tasks/tools/)
+1. [Terraform](https://www.terraform.io/downloads.html) Ensure Terraform is installed on your system.
+2. [Helm](https://helm.sh/docs/intro/install/) Ensure Helm is installed on your system.
+3. [kubectl](https://kubernetes.io/docs/tasks/tools/) Ensure kubectl is installed on your system.
 4. A running Kubernetes cluster
 5. Correct kubeconfig configuration for access to the cluster
 
@@ -272,9 +272,22 @@ terraform apply
 After Terraform finishes, verify that the Prometheus and Loki stacks are running properly:
 
 ```bash
+# check monitoring resources
 kubectl get all -n monitoring
+
+# check loki resources
 kubectl get all -n loki-stack
+
+# check persistent volume claims
+kubectl get pvc -A
+
+# check ssl certificates
+kubectl get certificates -A
 ```
+
+## After all steps you can see your grafana dashboard
+
+![Grafana dashboard](../images/grafana-dashboard.png "Grafana dashboard")
 
 ### Troubleshooting
 

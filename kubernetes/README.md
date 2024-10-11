@@ -17,9 +17,9 @@ This project automates the deployment of Kubernetes resources and Helm charts us
 
 Before starting, ensure you have the following installed on your local machine or environment:
 
-1. [Terraform](https://www.terraform.io/downloads.html) 
-2. [Helm](https://helm.sh/docs/intro/install/) 
-3. [kubectl](https://kubernetes.io/docs/tasks/tools/)
+1. [Terraform](https://www.terraform.io/downloads.html) Ensure Terraform is installed on your system.
+2. [Helm](https://helm.sh/docs/intro/install/) Ensure Helm is installed on your system.
+3. [kubectl](https://kubernetes.io/docs/tasks/tools/) Ensure kubectl is installed on your system.
 4. Access to a Kubernetes cluster (with kubeconfig properly configured)
 
 ### Optional:
@@ -125,6 +125,9 @@ kubectl get all -n local-path-storage
 
 # verify cert-manager resources
 kubectl get all -n cert-manager
+
+# check clusterissuer resource
+kubectl get clusterissuer
 
 # verify metrics-server resources
 kubectl get all -n kube-system | grep metrics-server

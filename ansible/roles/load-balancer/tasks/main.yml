@@ -1,4 +1,13 @@
 ---
+- name: check haproxy is installed or not
+  shell: "which haproxy"
+  ignore_errors: true
+  register: is_haproxy
+
+- name: end host when haproxy is installed
+  meta: end_host
+  when: is_haproxy.rc == 0
+
 - name: Update APT package list
   apt:
     update_cache: yes

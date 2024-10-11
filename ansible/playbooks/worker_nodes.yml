@@ -6,16 +6,22 @@
   gather_facts: true
   name: join kubernetes worker nodes
   tasks:
-    - name: copy join script to worker nodes
+    - name: Check if the worker node is already joined (kubelet.conf exists)
+      stat:
+        path: /etc/kubernetes/kubelet.conf
+      register: kubelet_conf_stat
+      tags: check_worker_node
+
+    - name: Copy join script to worker nodes
       copy:
         src: /tmp/kubeadm_join_command_worker.sh
         dest: /tmp/kubeadm_join_command_worker.sh
         mode: 0700
+      when: kubelet_conf_stat.stat.exists == false
       tags: join_worker_nodes
 
-    - name: Run the join command to join the worker node to the kubernetes cluster
-      command: "bash //tmp/kubeadm_join_command_worker.sh"
+    - name: Run the join command to join the worker node to the Kubernetes cluster
+      command: "bash /tmp/kubeadm_join_command_worker.sh"
       ignore_errors: true
+      when: kubelet_conf_stat.stat.exists == false
       tags: join_worker_nodes
-
-  

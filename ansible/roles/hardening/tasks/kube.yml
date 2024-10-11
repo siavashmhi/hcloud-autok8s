@@ -1,4 +1,13 @@
 ---
+- name: check kubeadm is installed or not
+  shell: "which kubeadm"
+  ignore_errors: true
+  register: is_kubeadm
+
+- name: end host when kubeadm is installed
+  meta: end_host
+  when: is_kubeadm.rc == 0
+
 - name: Create /etc/sysctl.d directory
   file:
     path: /etc/sysctl.d

@@ -1,4 +1,9 @@
 ---
+- name: check containerd is installed or not
+  shell: "which crictl"
+  ignore_errors: true
+  register: is_containerd
+
 - name: install dependency
   apt:
     name: "{{item}}"
@@ -14,64 +19,76 @@
     - lsb-release
     - gnupg
     - conntrack
+  when: is_containerd.rc == 1
 
 - name: Download and add Docker GcPG key
   shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  when: is_containerd.rc == 1
 
 - name: add docker repo
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu bionic stable
     state: present
+  when: is_containerd.rc == 1
 
 - name: install containerd.io
   apt:
     name: containerd.io
     state: latest
     update_cache: yes
+  when: is_containerd.rc == 1
 
 - name: Restart service containerd and daemon-reload 
   ansible.builtin.systemd:
     state: restarted
     daemon_reload: yes
     name: containerd
+  when: is_containerd.rc == 1
 
 - name: Enable containerd
   systemd:
     name: containerd
     enabled: yes
     state: restarted
+  when: is_containerd.rc == 1
 
 - name: Get default containerd config and save to /etc/containerd/config.toml
   command: "containerd config default"
   register: containerd_config
+  when: is_containerd.rc == 1
 
 - name: Write containerd config to /etc/containerd/config.toml
   copy:
     content: "{{ containerd_config.stdout }}"
     dest: /etc/containerd/config.toml
+  when: is_containerd.rc == 1
 
 - name: Update containerd config
   replace:
     path: /etc/containerd/config.toml
     regexp: 'SystemdCgroup = false'
     replace: 'SystemdCgroup = true'
+  when: is_containerd.rc == 1
 
 - name: Restart service containerd and daemon-reload 
   ansible.builtin.systemd:
     state: restarted
     daemon_reload: yes
     name: containerd
+  when: is_containerd.rc == 1
 
 - name: Enable containerd
   systemd:
     name: containerd
     enabled: yes
     state: restarted
+  when: is_containerd.rc == 1
 
 - name: Create crictl.yaml file
   file:
     path: /etc/crictl.yaml
     state: touch
+  when: is_containerd.rc == 1
 
 - name: Create crictl.yaml file
   ansible.builtin.copy:
@@ -80,3 +97,4 @@
       timeout: 0
       debug: false
     dest: /etc/crictl.yaml
+  when: is_containerd.rc == 1

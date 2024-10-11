@@ -6,18 +6,24 @@
   gather_facts: true
   name: setup kubernetes master nodes
   tasks:
+    - name: Check if Kubernetes is already initialized (kube-apiserver.yaml exists)
+      stat:
+        path: /etc/kubernetes/manifests/kube-apiserver.yaml
+      register: kube_apiserver_stat
+      tags: create_cluster
+
     - name: Pull all images 
       ansible.builtin.command: >
         kubeadm config images pull --config /opt/kubeadm_config.yml
       tags: create_cluster
-      when: inventory_hostname == 'master1'
+      when: inventory_hostname == 'master1' and kube_apiserver_stat.stat.exists == false
 
     - name: Initialize Kubernetes cluster (only on first master)
       ansible.builtin.command: >
         kubeadm init --config /opt/kubeadm_config.yml
       register: kubeadm_output
       tags: create_cluster
-      when: inventory_hostname == 'master1'
+      when: inventory_hostname == 'master1' and kube_apiserver_stat.stat.exists == false
 
     - name: Create .kube directory for the user
       ansible.builtin.file:
@@ -37,12 +43,12 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
       tags: create_cluster
-      when: inventory_hostname == 'master1'
+      when: inventory_hostname == 'master1' and kube_apiserver_stat.stat.exists == false
 
     - name: Install Flannel CNI (only on first master)
       ansible.builtin.command: >
         kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-      when: inventory_hostname == 'master1'
+      when: inventory_hostname == 'master1' and kube_apiserver_stat.stat.exists == false
       tags: add_cni
 
     - name: Fetch certificate directory from master1 to localhost
@@ -52,7 +58,7 @@
         mode: pull
         recursive: yes
       tags: copy_certs
-      when: inventory_hostname == 'master1'
+      when: inventory_hostname == 'master1' and kube_apiserver_stat.stat.exists == false
 
     - name: Copy certificate directory from localhost to other masters
       ansible.builtin.synchronize:
@@ -61,7 +67,13 @@
         mode: push
         recursive: yes
       tags: copy_certs
-      when: inventory_hostname == "master2" or inventory_hostname == "master3"
+      when: inventory_hostname == "master2" or inventory_hostname == "master3" and kube_apiserver_stat.stat.exists == false
+
+    - name: Check if node has already joined the control plane
+      stat:
+        path: /etc/kubernetes/kubelet.conf
+      register: kubelet_conf_stat
+      tags: join_master_nodes
 
     - name: Generate join command 
       shell: kubeadm token create --print-join-command --ttl 1h
@@ -74,7 +86,7 @@
         content: "{{ join_command.stdout }} --control-plane"
         dest: /tmp/kubeadm_join_command_master.sh
         mode: 0700
-      when: inventory_hostname == "master1" 
+      when: inventory_hostname == "master1"
       tags: join_master_nodes
 
     - name: Save join worker command to a file for future use
@@ -101,18 +113,18 @@
       when: inventory_hostname == "master1" 
       tags: join_master_nodes
 
-    - name: copy join script to master nodes
+    - name: Copy join script to master nodes
       copy:
         src: /tmp/kubeadm_join_command_master.sh
         dest: /tmp/kubeadm_join_command_master.sh
         mode: 0700
-      when: inventory_hostname == "master2" or inventory_hostname == "master3"
+      when: inventory_hostname == "master2" or inventory_hostname == "master3" 
       tags: join_master_nodes
 
     - name: Run the join command to join the master node to the control plane
       command: "bash /tmp/kubeadm_join_command_master.sh"
       ignore_errors: true
-      when: inventory_hostname == "master2" or inventory_hostname == "master3"
+      when: inventory_hostname != "master1" and kubelet_conf_stat.stat.exists == false
       tags: join_master_nodes
 
     - name: Copy kubeconfig to user directory

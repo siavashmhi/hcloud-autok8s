@@ -15,6 +15,7 @@ run_playbook() {
 # Apply Terraform configuration
 echo "Applying Terraform configuration..."
 cd Infrastructure/
+terraform init -upgrade
 terraform apply -auto-approve
 
 # Wait for Terraform to complete

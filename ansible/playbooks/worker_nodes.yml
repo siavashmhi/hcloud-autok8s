@@ -1,7 +1,5 @@
 ---
 - hosts: kubernetes-workers
-  vars:
-    ansible_ssh_private_key_file: /Users/siavashmohseni/.ssh/id_rsa
   become: true
   gather_facts: true
   name: join kubernetes worker nodes
